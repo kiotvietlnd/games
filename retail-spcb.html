@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE CHOSEN ONE - KiotViet Master Training</title>
+    <title>THE CHOSEN ONE - KiotViet Training Full Version</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
@@ -28,16 +28,13 @@
             font-weight: 800; font-size: 11px; color: #666; background: transparent; transition: 0.3s;
         }
         .mode-btn.active { background: var(--primary); color: white; box-shadow: 0 0 20px rgba(0, 169, 224, 0.5); }
-        .main-grid { display: grid; grid-template-columns: 320px 1fr 500px; gap: 20px; padding: 20px; flex: 1; }
+        .main-grid { display: grid; grid-template-columns: 320px 1fr 550px; gap: 20px; padding: 20px; flex: 1; }
         .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; backdrop-filter: blur(15px); padding: 20px; display: flex; flex-direction: column; }
         textarea { flex: 1; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 12px; color: #00FFCC; padding: 15px; font-size: 14px; resize: none; outline: none; }
         .game-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        
         .lucky-label { font-size: 18px; font-weight: 800; color: var(--accent); letter-spacing: 2px; margin-bottom: 10px; opacity: 0; transition: 0.3s; }
         .lucky-label.show { opacity: 1; }
-
         .winner-name { font-size: 54px; font-weight: 900; text-shadow: 0 0 30px var(--primary); text-align: center; min-height: 70px; margin-bottom: 20px; color: #fff; }
-        
         .spin-btn {
             width: 170px; height: 170px; border-radius: 50%;
             background: linear-gradient(135deg, var(--secondary), var(--primary));
@@ -45,15 +42,14 @@
             cursor: pointer; box-shadow: 0 0 40px rgba(0, 85, 149, 0.6); transition: 0.3s;
         }
         .spin-btn:hover:not(:disabled) { transform: scale(1.05); filter: brightness(1.2); }
-        .scenario-box { background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); padding: 20px; border-radius: 18px; flex: 1; overflow-y: auto; font-size: 13px; line-height: 1.6; }
-        .tag { background: rgba(0, 255, 204, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; margin-bottom: 8px; display: inline-block; }
-        .sc-title { font-size: 16px; font-weight: 800; color: #fff; margin-bottom: 5px; }
-        .sc-context { color: var(--primary); font-style: italic; margin-bottom: 12px; font-size: 12px; border-left: 2px solid; padding-left: 10px; }
-        .sc-step { margin-bottom: 10px; color: #d1d1d6; }
+        .scenario-box { background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); padding: 25px; border-radius: 18px; flex: 1; overflow-y: auto; font-size: 14px; line-height: 1.6; }
+        .tag { background: rgba(0, 255, 204, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-bottom: 10px; display: inline-block; }
+        .sc-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 8px; }
+        .sc-context { color: var(--primary); font-style: italic; margin-bottom: 15px; font-size: 13px; border-left: 3px solid; padding-left: 12px; }
+        .sc-step { margin-bottom: 12px; color: #d1d1d6; }
         .sc-step b { color: var(--accent); }
         .history-item { font-size: 11px; color: #52525b; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
-        
-        .panel-header { font-size: 12px; font-weight: 900; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
+        .panel-header { font-size: 13px; font-weight: 900; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
@@ -118,65 +114,76 @@
                     "<b>5. Công nợ:</b> Trả nợ cho Xưởng may và Thu nợ từ Chị Lan tại màn hình Đối tác.",
                     "<b>6. Báo cáo:</b> Hướng dẫn xem: Doanh thu thời gian, Tồn kho chi tiết, Lợi nhuận thuần."
                 ]
+            },
+            {
+                tag: "LUỒNG CƠ BẢN 03", title: "Cửa hàng Giày Da 'Classic Shoes'",
+                context: "Shop quản lý nhiều mẫu mã Giày/Túi theo Size số, cần kiểm soát nợ nhà sản xuất và lợi nhuận.",
+                steps: [
+                    "<b>1. Hàng hóa:</b> Thêm 'Giày Tây Oxford'. Đơn vị: Đôi. Thuộc tính: Màu sắc (Đen/Nâu) và Size (39, 40, 41).",
+                    "<b>2. Nhập hàng:</b> Nhập mỗi mẫu 20 đôi từ 'Tổng kho Da Giày'. Thêm mới NCC, thanh toán trước một ít và nợ lại.",
+                    "<b>3. Bán hàng:</b> Bán cho 'Anh Hùng' 2 đôi khác Size. Áp dụng giảm giá trực tiếp trên hóa đơn.",
+                    "<b>4. Trả hàng:</b> Anh Hùng trả lại 1 đôi do chật Size. Tìm <b>hóa đơn gốc</b> để trả hàng hoàn tiền.",
+                    "<b>5. Công nợ:</b> Vào mục Đối tác để Trả nợ NCC và Thu nợ từ Anh Hùng (nếu có).",
+                    "<b>6. Báo cáo:</b> Xem báo cáo Bán hàng theo nhân viên và Báo cáo Hàng hóa dưới định mức tồn."
+                ]
             }
         ];
 
         const BUOI2_MASTER = [
-            { 
+            { 
                 tag: "CASE 1: QUẢN TRỊ", title: "Cửa hàng Mẹ & Bé 'Bé Ngoan'",
                 context: "Vấn đề: Thuê nhân viên Lan nhưng sợ lộ doanh thu và muốn đẩy mạnh doanh số bán sỉ.",
                 steps: [
-                    "<b>1. Nhân viên:</b> Tạo tài khoản cho nhân viên 'Lan'. <b>Khóa quyền</b> xem báo cáo.",
-                    "<b>2. Dịch vụ:</b> Thêm hàng hóa dịch vụ 'Gói quà sinh nhật'.",
-                    "<b>3. Bảng giá:</b> Tạo 1 <b>Bảng giá sỉ</b> dựa trên bảng giá chung (Giảm 10%).",
-                    "<b>4. Nhập hàng:</b> Đang nhập hàng hãy <b>Thêm mới nhanh</b> sản phẩm mới chưa có danh mục."
+                    "<b>1. Nhân viên:</b> Tạo tài khoản cho nhân viên 'Lan'. <b>Khóa quyền</b> xem báo cáo doanh thu và giá vốn.",
+                    "<b>2. Dịch vụ:</b> Thêm hàng hóa dịch vụ 'Gói quà sinh nhật' (hàng phi vật thể).",
+                    "<b>3. Bảng giá:</b> Tạo 1 <b>Bảng giá sỉ</b> dựa trên bảng giá chung (Giảm 10% hoặc giá cố định).",
+                    "<b>4. Nhập hàng:</b> Đang làm phiếu nhập hãy sử dụng tính năng <b>Thêm mới nhanh</b> sản phẩm mới chưa có trong danh mục."
                 ]
             },
-            { 
+            { 
                 tag: "CASE 2: NHẬP HÀNG", title: "Siêu thị mini 'Tiện Lợi'",
                 context: "Vấn đề: Giá thị trường biến động, cần nhập hàng đa giá và kiểm soát giá vốn trung bình.",
                 steps: [
-                    "<b>1. Nhập hàng:</b> Nhập SP 'Mì Hảo Hảo' với <b>2 mức giá khác nhau</b> qua 2 lần nhập.",
-                    "<b>2. Đổi giá:</b> Thay đổi giá bán trực tiếp ngay trên phiếu nhập hàng.",
-                    "<b>3. Giá vốn:</b> Giải thích cơ chế tính <b>Giá vốn trung bình</b> của KiotViet.",
-                    "<b>4. Tra cứu:</b> Tại màn bán hàng, lọc SP nhanh theo <b>Nhóm hàng</b> và <b>Thuộc tính</b>."
+                    "<b>1. Nhập hàng:</b> Nhập SP 'Mì Hảo Hảo' với <b>2 mức giá khác nhau</b> qua 2 lần nhập để xem thay đổi giá vốn.",
+                    "<b>2. Đổi giá:</b> Thay đổi giá bán trực tiếp ngay trên phiếu nhập hàng để cập nhật giá thị trường.",
+                    "<b>3. Giá vốn:</b> Giải thích cơ chế tính <b>Giá vốn trung bình</b> của KiotViet khi có nhiều đợt nhập.",
+                    "<b>4. Tra cứu:</b> Tại màn bán hàng, lọc SP nhanh theo <b>Nhóm hàng</b> và <b>Thuộc tính</b> để tư vấn khách."
                 ]
             },
-            { 
+            { 
                 tag: "CASE 3: GIAO DỊCH", title: "Cửa hàng Đồ gia dụng 'HomePlus'",
                 context: "Vấn đề: Giờ cao điểm đông khách, cần thu nợ và trả hàng nhanh không cần hóa đơn.",
                 steps: [
-                    "<b>1. Bán hàng:</b> Khách mua hàng lạ, hãy <b>thêm mới nhanh</b> ngay trên màn bán hàng.",
-                    "<b>2. Công nợ:</b> Khách trả nợ cũ, <b>Thu nợ</b> trực tiếp tại màn hình bán hàng.",
-                    "<b>3. Trả hàng:</b> <b>Trả hàng nhanh</b> không cần hóa đơn gốc tại màn hình bán hàng.",
-                    "<b>4. Cấu hình:</b> Giới hạn thời gian cho phép khách trả hàng trong 3 ngày."
+                    "<b>1. Bán hàng:</b> Khách mua hàng lạ, hãy <b>thêm mới nhanh</b> khách hàng ngay trên màn bán hàng.",
+                    "<b>2. Công nợ:</b> Khách trả nợ cũ, thực hiện <b>Thu nợ</b> trực tiếp tại màn hình bán hàng (không qua quản lý).",
+                    "<b>3. Trả hàng:</b> Thực hiện <b>Trả hàng nhanh</b> (không cần hóa đơn gốc) tại màn hình bán hàng.",
+                    "<b>4. Cấu hình:</b> Thiết lập giới hạn thời gian cho phép khách trả hàng trong 3 ngày tại phần Thiết lập cửa hàng."
                 ]
             },
-            { 
+            { 
                 tag: "CASE 4: VẬN HÀNH", title: "Shop Mỹ phẩm 'Glow Up'",
                 context: "Vấn đề: Muốn nâng hạng khách VIP tự động và kiểm soát hàng hỏng theo nhóm hàng.",
                 steps: [
-                    "<b>1. VIP:</b> Tạo nhóm 'Khách VIP' (Giảm 10%) khi doanh thu đạt trên 5 triệu.",
-                    "<b>2. Kiểm kho 1:</b> Tạo phiếu kiểm kho cho <b>1 sản phẩm</b> cụ thể.",
-                    "<b>3. Kiểm kho 2:</b> Tạo phiếu kiểm kho cho toàn bộ một <b>Nhóm hàng</b>.",
-                    "<b>4. Sổ quỹ:</b> Chi tiền điện và Thêm 1 <b>Tài khoản ngân hàng</b> mới của shop."
+                    "<b>1. VIP:</b> Tạo nhóm 'Khách VIP' tự động giảm 10% khi doanh thu khách hàng đạt trên 5 triệu.",
+                    "<b>2. Kiểm kho 1:</b> Tạo phiếu kiểm kho cho <b>1 sản phẩm</b> cụ thể bị lệch tồn.",
+                    "<b>3. Kiểm kho 2:</b> Tạo phiếu kiểm kho cho toàn bộ một <b>Nhóm hàng</b> (ví dụ: Son môi).",
+                    "<b>4. Sổ quỹ:</b> Lập phiếu Chi tiền điện và Thêm 1 <b>Tài khoản ngân hàng</b> mới của chủ shop vào sổ quỹ."
                 ]
             },
-            { 
+            { 
                 tag: "CASE 5: DEMO", title: "Thử thách: Master KiotViet (1)",
-                context: "Thể hiện bản lĩnh: Hoàn thiện quy trình kinh doanh từ A-Z.",
-                steps: ["<b>Yêu cầu:</b> Demo mượt 6 bước: Thiết lập -> Nhập hàng -> Bán hàng -> Trả hàng -> Công nợ -> Xem Báo cáo Tổng quan & Tài chính."]
+                context: "Thể hiện bản lĩnh: Hoàn thiện quy trình kinh doanh chuyên nghiệp từ A-Z.",
+                steps: ["<b>Yêu cầu:</b> Thực hiện mượt mà 6 bước: Thiết lập hàng hóa -> Nhập hàng -> Bán hàng -> Trả hàng bill gốc -> Thu/Chi nợ -> Xem Báo cáo Tổng quan & Tài chính."]
             },
-            { 
+            { 
                 tag: "CASE 6: DEMO", title: "Thử thách: Master KiotViet (2)",
                 context: "Thể hiện bản lĩnh: Show kỹ năng quản lý kho và báo cáo ngang chuyên nghiệp.",
-                steps: ["<b>Yêu cầu:</b> Demo mượt 6 bước: Thiết lập -> Nhập hàng -> Bán hàng -> Trả hàng -> Công nợ -> Báo cáo Cuối ngày & Xuất-Nhập-Tồn."]
+                steps: ["<b>Yêu cầu:</b> Thực hiện mượt mà 6 bước: Thiết lập hàng hóa -> Nhập hàng -> Bán hàng -> Trả hàng bill gốc -> Thu/Chi nợ -> Báo cáo Cuối ngày & Xuất-Nhập-Tồn."]
             }
         ];
 
         let currentMode = 1; let spinCount = 0; let isSpinning = false; let poolS1 = [...BUOI1_MASTER];
         const sndTick = document.getElementById('soundTick'); const sndWin = document.getElementById('soundWin');
-        const funnyTexts = ["CHIẾN BINH MAY MẮN LÀ...", "CHỦ NHÂN THỬ THÁCH LÀ...", "GỌI TÊN ĐỐI THỦ...", "AI SẼ LÀ MASTER TIẾP THEO?", "SINH RA ĐỂ CHIẾN..."];
 
         function getNames() { return document.getElementById('nameList').value.split('\n').filter(n => n.trim() !== ""); }
         function updateCount() { document.getElementById('countDisplay').innerText = `${getNames().length} ĐỐI THỦ ĐANG CHỜ`; }
@@ -202,10 +209,9 @@
 
         function startSpin() {
             const names = getNames();
-            if (names.length === 0) return alert("Hết chiến binh rồi!");
+            if (names.length === 0) return alert("Vui lòng nhập danh sách học viên!");
             if (isSpinning) return;
             isSpinning = true; document.getElementById('spinBtn').disabled = true;
-            document.getElementById('luckyLabel').innerText = funnyTexts[Math.floor(Math.random()*funnyTexts.length)];
             document.getElementById('luckyLabel').classList.add('show');
             
             let start = Date.now();
