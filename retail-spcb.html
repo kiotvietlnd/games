@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>THE CHOSEN ONE - KiotViet Training Full Version</title>
+    <title>THE CHOSEN ONE - FULL DETAIL SCRIPT</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         :root {
             --primary: #00A9E0; --secondary: #005595; --accent: #00FFCC; --bg: #030712;
             --panel: rgba(255, 255, 255, 0.05); --border: rgba(0, 169, 224, 0.3);
+            --danger: #ff4d4d;
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -32,8 +33,6 @@
         .panel { background: var(--panel); border: 1px solid var(--border); border-radius: 20px; backdrop-filter: blur(15px); padding: 20px; display: flex; flex-direction: column; }
         textarea { flex: 1; background: rgba(0, 0, 0, 0.5); border: 1px solid var(--border); border-radius: 12px; color: #00FFCC; padding: 15px; font-size: 14px; resize: none; outline: none; }
         .game-zone { display: flex; flex-direction: column; align-items: center; justify-content: center; }
-        .lucky-label { font-size: 18px; font-weight: 800; color: var(--accent); letter-spacing: 2px; margin-bottom: 10px; opacity: 0; transition: 0.3s; }
-        .lucky-label.show { opacity: 1; }
         .winner-name { font-size: 54px; font-weight: 900; text-shadow: 0 0 30px var(--primary); text-align: center; min-height: 70px; margin-bottom: 20px; color: #fff; }
         .spin-btn {
             width: 170px; height: 170px; border-radius: 50%;
@@ -41,12 +40,17 @@
             border: 8px solid rgba(255,255,255,0.1); color: white; font-size: 20px; font-weight: 900;
             cursor: pointer; box-shadow: 0 0 40px rgba(0, 85, 149, 0.6); transition: 0.3s;
         }
-        .spin-btn:hover:not(:disabled) { transform: scale(1.05); filter: brightness(1.2); }
-        .scenario-box { background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); padding: 25px; border-radius: 18px; flex: 1; overflow-y: auto; font-size: 14px; line-height: 1.6; }
+        .spin-btn:disabled { opacity: 0.5; }
+        .absent-btn {
+            margin-top: 15px; background: rgba(255, 77, 77, 0.1); border: 1px solid var(--danger);
+            color: var(--danger); padding: 8px 15px; border-radius: 8px; font-size: 11px;
+            font-weight: 700; cursor: pointer; display: none; transition: 0.3s;
+        }
+        .scenario-box { background: rgba(0, 0, 0, 0.4); border: 1px solid var(--border); padding: 20px; border-radius: 18px; flex: 1; overflow-y: auto; font-size: 14px; line-height: 1.6; }
         .tag { background: rgba(0, 255, 204, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; margin-bottom: 10px; display: inline-block; }
         .sc-title { font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 8px; }
-        .sc-context { color: var(--primary); font-style: italic; margin-bottom: 15px; font-size: 13px; border-left: 3px solid; padding-left: 12px; }
-        .sc-step { margin-bottom: 12px; color: #d1d1d6; }
+        .sc-context { color: #FFA500; font-weight: bold; margin-bottom: 15px; font-size: 13px; background: rgba(255, 165, 0, 0.1); padding: 10px; border-radius: 8px; border-left: 4px solid; }
+        .sc-step { margin-bottom: 10px; color: #d1d1d6; font-size: 13px; }
         .sc-step b { color: var(--accent); }
         .history-item { font-size: 11px; color: #52525b; padding: 5px 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; }
         .panel-header { font-size: 13px; font-weight: 900; color: var(--accent); margin-bottom: 15px; display: flex; align-items: center; gap: 8px; text-transform: uppercase; letter-spacing: 1px; }
@@ -57,32 +61,32 @@
     <header>
         <div class="logo-text">THE CHOSEN ONE</div>
         <div class="mode-selector">
-            <button class="mode-btn active" id="btnMode1" onclick="setMode(1)">BUỔI 1: CƠ BẢN</button>
-            <button class="mode-btn" id="btnMode2" onclick="setMode(2)">BUỔI 2: HỎI ĐÁP</button>
+            <button class="mode-btn active" id="btnMode1" onclick="setMode(1)">BUỔI 1: LUỒNG MASTER</button>
+            <button class="mode-btn" id="btnMode2" onclick="setMode(2)">BUỔI 2: CHUYÊN SÂU</button>
         </div>
     </header>
 
     <div class="main-grid">
         <div class="panel">
-            <h2 class="panel-header">⚡ HÀNG CHỜ CHIẾN BINH</h2>
+            <h2 class="panel-header">⚡ DANH SÁCH CHIẾN BINH</h2>
             <textarea id="nameList" placeholder="Dán danh sách học viên..."></textarea>
-            <div id="countDisplay" style="text-align: center; font-size: 11px; margin-top: 10px; color: var(--secondary); font-weight: 800;">0 ĐỐI THỦ ĐANG CHỜ</div>
+            <div id="countDisplay" style="text-align: center; font-size: 11px; margin-top: 10px; color: var(--secondary); font-weight: 800;">0 NGƯỜI</div>
         </div>
 
         <div class="game-zone">
-            <div id="luckyLabel" class="lucky-label">GỌI TÊN CHIẾN BINH...</div>
             <div id="winnerName" class="winner-name">---</div>
-            <button class="spin-btn" id="spinBtn" onclick="startSpin()">TRIỆU HỒI</button>
-            <div id="turnLabel" style="margin-top: 20px; font-weight: bold; color: var(--secondary); letter-spacing: 1px;">LƯỢT THỨ: 0</div>
+            <button class="spin-btn" id="spinBtn" onclick="handleSpinClick()">TRIỆU HỒI</button>
+            <button class="absent-btn" id="absentBtn" onclick="handleAbsent()">VẮNG MẶT - GIỮ KỊCH BẢN</button>
+            <div id="turnLabel" style="margin-top: 20px; font-weight: bold; color: var(--secondary); letter-spacing: 1px;">LƯỢT: 0</div>
         </div>
 
         <div class="panel">
-            <h2 class="panel-header">🔥 THỬ THÁCH SINH TỬ</h2>
+            <h2 class="panel-header">🔥 TÌNH HUỐNG THỰC CHIẾN</h2>
             <div class="scenario-box" id="scenarioBox">
-                <div style="text-align: center; opacity: 0.3; margin-top: 100px;">Đang đợi chủ nhân mới...</div>
+                <div style="text-align: center; opacity: 0.3; margin-top: 100px;">Đang chờ chọn chiến binh...</div>
             </div>
             <div id="historyList" style="margin-top: 15px; max-height: 120px; overflow-y: auto;"></div>
-            <button onclick="resetGame()" style="margin-top: 10px; background: none; border: 1px solid #333; color: #555; padding: 5px; font-size: 10px; cursor: pointer; border-radius: 5px;">HỒI SINH HỆ THỐNG</button>
+            <button onclick="resetGame()" style="margin-top: 5px; background: none; border: 1px solid #333; color: #444; padding: 4px; font-size: 9px; cursor: pointer; border-radius: 4px;">BẮT ĐẦU LẠI</button>
         </div>
     </div>
 
@@ -90,103 +94,173 @@
     <audio id="soundWin"><source src="https://www.soundjay.com/misc/sounds/magic-chime-01.mp3" type="audio/mpeg"></audio>
 
     <script>
-        const BUOI1_MASTER = [
+        const BUOI1_DATA = [
             {
-                tag: "LUỒNG CƠ BẢN 01", title: "Cửa hàng Nước giải khát 'Giải Khát 247'",
-                context: "Cửa hàng cần quản lý Bia theo Lon và Thùng, theo dõi công nợ NCC và báo cáo doanh thu.",
+                tag: "TÌNH HUỐNG 01", title: "Thời trang Nem Luxury",
+                context: "Chủ shop là Chị Lan. Chị đang đau đầu vì không nhớ nổi Size/Màu của váy lụa trong kho.",
                 steps: [
-                    "<b>1. Hàng hóa:</b> Thêm 'Bia Tiger'. Lon (cơ bản) & Thùng = 24 Lon (quy đổi). Nhóm hàng, Giá bán/vốn, Tồn kho.",
-                    "<b>2. Nhập hàng:</b> Nhập 50 Thùng từ 'NCC Thiên Nga'. Thêm NCC mới, lưu công nợ 1 phần.",
-                    "<b>3. Bán hàng:</b> Bán cho khách 'Anh Tuấn' 1 Thùng + 6 Lon. Thanh toán: Tiền mặt + Chuyển khoản.",
-                    "<b>4. Trả hàng:</b> Anh Tuấn trả lại 2 Lon lẻ. Tìm <b>hóa đơn gốc</b> để xử lý.",
-                    "<b>5. Công nợ:</b> Chi trả nợ cho NCC và Thu nợ từ khách Tuấn tại màn hình Quản lý.",
-                    "<b>6. Báo cáo:</b> Hướng dẫn xem: Doanh thu (Tổng quan), Xuất-Nhập-Tồn, Lợi nhuận thuần, Báo cáo cuối ngày ngang."
+                    "<b>1. Thêm hàng:</b> Áo Sơ Mi (Size: S, M; Màu: Trắng, Đen).",
+                    "<b>2. Nhập hàng:</b> Nhập 100 cái từ NCC Đầu Vào. Giá vốn 200k, bán 450k. Nợ NCC 2 triệu.",
+                    "<b>3. Bán hàng:</b> Bán cho khách Mua Hàng 2 cái. Thanh toán: 500k tiền mặt, còn lại chuyển khoản.",
+                    "<b>4. Trả hàng:</b> Khách Mua Hàng mang Hóa đơn gốc trả lại 1 cái size S do mặc chật.",
+                    "<b>5. Công nợ:</b> Tại MH Quản lý, tạo phiếu chi trả nợ 2 triệu cho NCC Đầu Vào.",
+                    "<b>6. Báo cáo:</b> Xem BC Doanh thu theo mặt hàng để kiểm tra số lượng Áo đã bán thực tế."
                 ]
             },
             {
-                tag: "LUỒNG CƠ BẢN 02", title: "Shop Váy Thiết Kế 'Lily Design'",
-                context: "Shop cần quản lý váy theo thuộc tính Màu/Size, xử lý nợ xưởng may và báo cáo doanh thu.",
+                tag: "TÌNH HUỐNG 02", title: "Tạp hóa An Bình",
+                context: "Chủ shop là Anh Bình. Anh cần quản lý Bia theo lon và thùng để tránh nhân viên bán lẻ làm lệch kho.",
                 steps: [
-                    "<b>1. Hàng hóa:</b> Thêm 'Váy hoa nhí'. Chiếc (cơ bản). Thuộc tính (Màu sắc/Size), Giá bán/vốn, Tồn kho.",
-                    "<b>2. Nhập hàng:</b> Nhập 100 chiếc từ 'Xưởng may Thanh'. Thêm NCC mới, nợ 100%.",
-                    "<b>3. Bán hàng:</b> Bán cho khách 'Chị Lan' nhiều Size. Thanh toán: Tiền mặt + Chuyển khoản.",
-                    "<b>4. Trả hàng:</b> Chị Lan trả lại 1 chiếc. Tìm <b>hóa đơn gốc</b> để xử lý.",
-                    "<b>5. Công nợ:</b> Trả nợ cho Xưởng may và Thu nợ từ Chị Lan tại màn hình Đối tác.",
-                    "<b>6. Báo cáo:</b> Hướng dẫn xem: Doanh thu thời gian, Tồn kho chi tiết, Lợi nhuận thuần."
+                    "<b>1. Thêm hàng:</b> Bia Heineken. ĐVT: Lon. ĐVT quy đổi: Thùng (24 lon).",
+                    "<b>2. Nhập hàng:</b> Nhập 20 thùng từ NCC Đầu Vào. Giá vốn 380k/thùng. Nợ full hóa đơn.",
+                    "<b>3. Bán hàng:</b> Bán sỉ 2 thùng cho khách Mua Hàng. Cho khách nợ lại toàn bộ.",
+                    "<b>4. Trả hàng:</b> Khách Mua Hàng mang Hóa đơn gốc trả lại 5 lon do móp méo.",
+                    "<b>5. Công nợ:</b> Tại MH Quản lý, tạo phiếu thu nợ từ khách Mua Hàng cho đơn sỉ trên.",
+                    "<b>6. Báo cáo:</b> Xem BC Hàng hóa để thấy tồn kho quy đổi chính xác (còn bao nhiêu Thùng/Lon)."
                 ]
             },
             {
-                tag: "LUỒNG CƠ BẢN 03", title: "Cửa hàng Giày Da 'Classic Shoes'",
-                context: "Shop quản lý nhiều mẫu mã Giày/Túi theo Size số, cần kiểm soát nợ nhà sản xuất và lợi nhuận.",
+                tag: "TÌNH HUỐNG 03", title: "Mỹ phẩm Guardian",
+                context: "Chủ shop là Bạn Vy. Vy muốn việc khách đổi trả màu son liên tục không làm chị rối két tiền mặt.",
                 steps: [
-                    "<b>1. Hàng hóa:</b> Thêm 'Giày Tây Oxford'. Đơn vị: Đôi. Thuộc tính: Màu sắc (Đen/Nâu) và Size (39, 40, 41).",
-                    "<b>2. Nhập hàng:</b> Nhập mỗi mẫu 20 đôi từ 'Tổng kho Da Giày'. Thêm mới NCC, thanh toán trước một ít và nợ lại.",
-                    "<b>3. Bán hàng:</b> Bán cho 'Anh Hùng' 2 đôi khác Size. Áp dụng giảm giá trực tiếp trên hóa đơn.",
-                    "<b>4. Trả hàng:</b> Anh Hùng trả lại 1 đôi do chật Size. Tìm <b>hóa đơn gốc</b> để trả hàng hoàn tiền.",
-                    "<b>5. Công nợ:</b> Vào mục Đối tác để Trả nợ NCC và Thu nợ từ Anh Hùng (nếu có).",
-                    "<b>6. Báo cáo:</b> Xem báo cáo Bán hàng theo nhân viên và Báo cáo Hàng hóa dưới định mức tồn."
+                    "<b>1. Thêm hàng:</b> Son Kem 3CE (Thuộc tính: Đỏ Thuần, Cam Cháy).",
+                    "<b>2. Nhập hàng:</b> Nhập mỗi màu 10 cây từ NCC Đầu Vào. Giá vốn 250k. Thanh toán đủ.",
+                    "<b>3. Bán hàng:</b> Bán lẻ 1 cây Đỏ Thuần cho khách Mua Hàng (Thu tiền mặt).",
+                    "<b>4. Trả hàng:</b> Khách Mua Hàng cầm Hóa đơn gốc trả hàng ngay để lấy lại tiền mặt.",
+                    "<b>5. Công nợ:</b> Tạo phiếu chi thanh toán nốt 1 khoản nợ cũ bất kỳ cho NCC Đầu Vào.",
+                    "<b>6. Báo cáo:</b> Xem BC Cuối ngày để chốt tổng tiền mặt thực tế đã thu/chi trong ca."
+                ]
+            },
+            {
+                tag: "TÌNH HUỐNG 04", title: "Điện máy Sunhouse",
+                context: "Chủ shop là Chú Hùng. Chú thường xuyên quên đòi nợ thầu xây dựng vì chỉ ghi vào sổ tay.",
+                steps: [
+                    "<b>1. Thêm hàng:</b> Nồi cơm điện.",
+                    "<b>2. Nhập hàng:</b> Nhập 10 cái từ NCC Đầu Vào. Giá vốn 800k. Giá bán 1.200k.",
+                    "<b>3. Bán hàng:</b> Bán cho khách Mua Hàng 3 cái. Ghi nợ 100% hóa đơn.",
+                    "<b>4. Trả hàng:</b> Khách Mua Hàng trả lại 1 cái lỗi vỏ (yêu cầu tìm đúng Hóa đơn gốc).",
+                    "<b>5. Công nợ:</b> Khách Mua Hàng thanh toán trước 1 triệu. Tạo phiếu thu nợ tại MH Quản lý.",
+                    "<b>6. Báo cáo:</b> Mở BC Tài chính, chỉ ra khoản 'Phải thu khách hàng' còn lại của khách."
+                ]
+            },
+            {
+                tag: "TÌNH HUỐNG 05", title: "Nông sản Sạch Eco",
+                context: "Chủ shop là Chị Hoa. Chị muốn biết chính xác lợi nhuận bán gạo sau khi trừ hàng khách trả.",
+                steps: [
+                    "<b>1. Thêm hàng:</b> Gạo ST25. ĐVT: Kg. ĐVT quy đổi: Bao (25kg).",
+                    "<b>2. Nhập hàng:</b> Nhập 40 bao từ NCC Đầu Vào. Thanh toán tiền mặt đủ.",
+                    "<b>3. Bán hàng:</b> Bán lẻ 10kg cho khách Mua Hàng qua điện thoại.",
+                    "<b>4. Trả hàng:</b> Khách Mua Hàng trả 2kg gạo bị ẩm kèm theo Hóa đơn gốc.",
+                    "<b>5. Công nợ:</b> Tạo phiếu chi thanh toán nợ cho một NCC Đầu Vào khác trong danh sách.",
+                    "<b>6. Báo cáo:</b> Show màn hình Tổng quan để xem lợi nhuận gộp thực tế sau khi đã trả hàng."
                 ]
             }
         ];
 
-        const BUOI2_MASTER = [
-            { 
-                tag: "CASE 1: QUẢN TRỊ", title: "Cửa hàng Mẹ & Bé 'Bé Ngoan'",
-                context: "Vấn đề: Thuê nhân viên Lan nhưng sợ lộ doanh thu và muốn đẩy mạnh doanh số bán sỉ.",
+        const BUOI2_DATA = [
+            {
+                tag: "TÌNH HUỐNG 01", title: "Anh Minh (Đồ chơi)",
+                context: "Cần phân quyền cho nhân viên mới, bán thêm dịch vụ gói quà, thiết lập giá sỉ và nhập nhanh hàng mới về.",
                 steps: [
-                    "<b>1. Nhân viên:</b> Tạo tài khoản cho nhân viên 'Lan'. <b>Khóa quyền</b> xem báo cáo doanh thu và giá vốn.",
-                    "<b>2. Dịch vụ:</b> Thêm hàng hóa dịch vụ 'Gói quà sinh nhật' (hàng phi vật thể).",
-                    "<b>3. Bảng giá:</b> Tạo 1 <b>Bảng giá sỉ</b> dựa trên bảng giá chung (Giảm 10% hoặc giá cố định).",
-                    "<b>4. Nhập hàng:</b> Đang làm phiếu nhập hãy sử dụng tính năng <b>Thêm mới nhanh</b> sản phẩm mới chưa có trong danh mục."
+                    "<b>1. Phân quyền:</b> Tạo tài khoản tên Vân, không phân quyền xem báo cáo.",
+                    "<b>2. Hàng hóa Dịch vụ:</b> Hàng dịch vụ 'Gói quà' giá 30k.",
+                    "<b>3. Bảng giá:</b> Thiết lập bảng giá 'Khách sỉ' (giảm 10% so với giá chung).",
+                    "<b>4. Nhập hàng:</b> Thêm mới hàng hóa 'Pin AA' trong phiếu nhập hàng."
                 ]
             },
-            { 
-                tag: "CASE 2: NHẬP HÀNG", title: "Siêu thị mini 'Tiện Lợi'",
-                context: "Vấn đề: Giá thị trường biến động, cần nhập hàng đa giá và kiểm soát giá vốn trung bình.",
+            {
+                tag: "TÌNH HUỐNG 02", title: "Anh Nam (Phụ tùng)",
+                context: "Gặp khó khăn khi giá nhập biến động liên tục và cần tra cứu nhanh sản phẩm theo nhóm hàng.",
                 steps: [
-                    "<b>1. Nhập hàng:</b> Nhập SP 'Mì Hảo Hảo' với <b>2 mức giá khác nhau</b> qua 2 lần nhập để xem thay đổi giá vốn.",
-                    "<b>2. Đổi giá:</b> Thay đổi giá bán trực tiếp ngay trên phiếu nhập hàng để cập nhật giá thị trường.",
-                    "<b>3. Giá vốn:</b> Giải thích cơ chế tính <b>Giá vốn trung bình</b> của KiotViet khi có nhiều đợt nhập.",
-                    "<b>4. Tra cứu:</b> Tại màn bán hàng, lọc SP nhanh theo <b>Nhóm hàng</b> và <b>Thuộc tính</b> để tư vấn khách."
+                    "<b>1. Khởi tạo:</b> Thêm hàng 'Lốp xe Honda', nhóm Phụ tùng, giá vốn 300k, bán 500k.",
+                    "<b>2. Nhập hàng:</b> Tạo 1 phiếu nhập có 2 đợt giá (300k và 350k).",
+                    "<b>3. Thay đổi giá:</b> Sửa giá bán lốp xe Honda thành 550k ngay khi tạo 1 phiếu nhập mới.",
+                    "<b>4. Hướng dẫn:</b> Xem lại cách tính giá vốn của hàng hóa trên hệ thống cho mặt hàng đang có nhiều mức giá khác nhau.",
+                    "<b>5. Tra cứu:</b> Tra cứu sản phẩm theo đúng nhóm 'Phụ tùng' trên màn hình bán hàng."
                 ]
             },
-            { 
-                tag: "CASE 3: GIAO DỊCH", title: "Cửa hàng Đồ gia dụng 'HomePlus'",
-                context: "Vấn đề: Giờ cao điểm đông khách, cần thu nợ và trả hàng nhanh không cần hóa đơn.",
+            {
+                tag: "TÌNH HUỐNG 03", title: "Chị Ngọc (Pet Shop)",
+                context: "Muốn đẩy nhanh tốc độ bán hàng, thu nợ nhanh tại quầy và xử lý trả hàng linh hoạt khi mất hóa đơn.",
                 steps: [
-                    "<b>1. Bán hàng:</b> Khách mua hàng lạ, hãy <b>thêm mới nhanh</b> khách hàng ngay trên màn bán hàng.",
-                    "<b>2. Công nợ:</b> Khách trả nợ cũ, thực hiện <b>Thu nợ</b> trực tiếp tại màn hình bán hàng (không qua quản lý).",
-                    "<b>3. Trả hàng:</b> Thực hiện <b>Trả hàng nhanh</b> (không cần hóa đơn gốc) tại màn hình bán hàng.",
-                    "<b>4. Cấu hình:</b> Thiết lập giới hạn thời gian cho phép khách trả hàng trong 3 ngày tại phần Thiết lập cửa hàng."
+                    "<b>1. Thêm nhanh:</b> Thêm mới hàng hóa 'Cát vệ sinh' ngay tại màn hình bán hàng.",
+                    "<b>2. Ghi nợ:</b> Bán hàng cho anh Trung với số lượng là 5 bao Cát vệ sinh, lưu nợ 50% đơn hàng.",
+                    "<b>3. Thu nợ:</b> Thực hiện thao tác anh Trung đến trả nợ nốt số tiền còn thiếu.",
+                    "<b>4. Trả hàng:</b> Xử lý trả hàng nhanh 1 bao Cát cho khách lẻ mà không cần hóa đơn gốc.",
+                    "<b>5. Cài đặt:</b> Thiết lập thời gian cho phép trả hàng tối đa là 7 ngày."
                 ]
             },
-            { 
-                tag: "CASE 4: VẬN HÀNH", title: "Shop Mỹ phẩm 'Glow Up'",
-                context: "Vấn đề: Muốn nâng hạng khách VIP tự động và kiểm soát hàng hỏng theo nhóm hàng.",
+            {
+                tag: "TÌNH HUỐNG 04", title: "Chị Hà (Nội thất)",
+                context: "Cần quản lý nhóm khách Thân Thiết tự động, kiểm soát kho hàng theo nhóm và theo dõi chi phí vận hành.",
                 steps: [
-                    "<b>1. VIP:</b> Tạo nhóm 'Khách VIP' tự động giảm 10% khi doanh thu khách hàng đạt trên 5 triệu.",
-                    "<b>2. Kiểm kho 1:</b> Tạo phiếu kiểm kho cho <b>1 sản phẩm</b> cụ thể bị lệch tồn.",
-                    "<b>3. Kiểm kho 2:</b> Tạo phiếu kiểm kho cho toàn bộ một <b>Nhóm hàng</b> (ví dụ: Son môi).",
-                    "<b>4. Sổ quỹ:</b> Lập phiếu Chi tiền điện và Thêm 1 <b>Tài khoản ngân hàng</b> mới của chủ shop vào sổ quỹ."
+                    "<b>1. Nhóm KH:</b> Tạo nhóm 'Thân thiết' được giảm 10% với điều kiện doanh thu từ 5 triệu trở lên. Nếu khách trả hàng làm doanh thu không còn đủ điều kiện, khách sẽ bị loại khỏi nhóm. Show kết quả cho chị Hà xem khi khách hàng không còn đủ điều kiện.",
+                    "<b>2. Kiểm kho:</b> Tạo phiếu Kiểm kho mặt hàng 'Đèn ngủ'.",
+                    "<b>3. Sổ quỹ:</b> Tạo phiếu chi tiền điện 500K.",
+                    "<b>4. Tài khoản:</b> Thêm số tài khoản ngân hàng Vietcombank."
                 ]
             },
-            { 
-                tag: "CASE 5: DEMO", title: "Thử thách: Master KiotViet (1)",
-                context: "Thể hiện bản lĩnh: Hoàn thiện quy trình kinh doanh chuyên nghiệp từ A-Z.",
-                steps: ["<b>Yêu cầu:</b> Thực hiện mượt mà 6 bước: Thiết lập hàng hóa -> Nhập hàng -> Bán hàng -> Trả hàng bill gốc -> Thu/Chi nợ -> Xem Báo cáo Tổng quan & Tài chính."]
+            {
+                tag: "TÌNH HUỐNG 05", title: "Anh Bắc (Gạch Men)",
+                context: "Khách công trình mua thừa gạch và muốn trả lại để đổi sang loại gạch cao cấp hơn.",
+                steps: [
+                    "<b>1. Khai báo:</b> Gạch Men Prime (Vốn 150k, Bán 250k). Gạch Granite (Vốn 250k, Bán 350k). ĐVT m2.",
+                    "<b>2. Nhập hàng:</b> Nhập 200 mỗi loại từ NCC Đầu Vào. Nợ NCC 10 triệu.",
+                    "<b>3. Bán hàng:</b> Khách Mua Gạch Men Prime 50 m2. Khách thanh toán trước một nửa.",
+                    "<b>4. Trả & Đổi hàng:</b> Khách trả 10 m2 thừa (không hóa đơn gốc) và đổi sang 'Gạch Granite' ngay trên phiếu trả.",
+                    "<b>5. Công nợ:</b> Tạo phiếu chi thanh toán nốt nợ cho NCC Đầu Vào.",
+                    "<b>6. Báo cáo:</b> Xem báo cáo Doanh thu để thấy giá trị đơn hàng sau khi bù trừ đổi trả."
+                ]
             },
-            { 
-                tag: "CASE 6: DEMO", title: "Thử thách: Master KiotViet (2)",
-                context: "Thể hiện bản lĩnh: Show kỹ năng quản lý kho và báo cáo ngang chuyên nghiệp.",
-                steps: ["<b>Yêu cầu:</b> Thực hiện mượt mà 6 bước: Thiết lập hàng hóa -> Nhập hàng -> Bán hàng -> Trả hàng bill gốc -> Thu/Chi nợ -> Báo cáo Cuối ngày & Xuất-Nhập-Tồn."]
+            {
+                tag: "TÌNH HUỐNG 06", title: "Chị My (Quà tặng)",
+                context: "Khách ghé mua thêm quà và muốn thanh toán dứt điểm khoản nợ cũ còn thiếu từ tháng trước.",
+                steps: [
+                    "<b>1. Hàng hóa:</b> 'Lồng đèn gỗ', giá vốn 50k, giá bán 120k.",
+                    "<b>2. Nhập hàng:</b> Nhập 100 cái từ NCC Đầu Vào. Thanh toán trước 2 triệu.",
+                    "<b>3. Bán hàng:</b> Lên đơn bán 2 cái cho chị Xuân. Chị Xuân nợ lại 50%.",
+                    "<b>4. Trả hàng:</b> Chị Xuân mang trả 1 cái lồng đèn bị lỗi (có hóa đơn gốc).",
+                    "<b>5. Công nợ:</b> Tạo phiếu chi công nợ để thanh toán phần tiền còn lại cho NCC Đầu Vào.",
+                    "<b>6. Báo cáo:</b> Xem báo cáo Cuối ngày để thấy tổng tiền mặt thu được bao gồm cả tiền hàng và tiền nợ."
+                ]
+            },
+            {
+                tag: "TÌNH HUỐNG 07", title: "Anh Long (Siêu thị)",
+                context: "Hàng mới về khách đã đòi mua ngay, nhân viên phải vừa bán vừa cập nhật hàng mới vào hệ thống.",
+                steps: [
+                    "<b>1. Thêm hàng nhanh:</b> Thêm mới hàng hóa 'Bánh Quy' trực tiếp khi đang bán hàng cho khách.",
+                    "<b>2. Nhập hàng:</b> Quay lại MH Quản lý tạo phiếu Nhập hàng cho Bánh Quy (SL 50, nợ NCC Bánh Kẹo Nhập Khẩu).",
+                    "<b>3. Bán hàng:</b> Bán cho chị Ngọc 10 túi Bánh Quy (Thanh toán: Tiền mặt + ví điện tử).",
+                    "<b>4. Trả hàng:</b> Chị Ngọc quay lại trả hàng nhanh 2 sản phẩm do đổi ý.",
+                    "<b>5. Công nợ:</b> Tạo phiếu chi nợ phát sinh với NCC Bánh Kẹo Nhập Khẩu.",
+                    "<b>6. Báo cáo:</b> Xem báo tổng quan doanh thu và báo cáo xuất nhập tồn chi tiết của Bánh Quy."
+                ]
             }
         ];
 
-        let currentMode = 1; let spinCount = 0; let isSpinning = false; let poolS1 = [...BUOI1_MASTER];
-        const sndTick = document.getElementById('soundTick'); const sndWin = document.getElementById('soundWin');
+        let currentMode = 1;
+        let spinCount = 0;
+        let isSpinning = false;
+        let pool = [];
+        let currentTask = null;
+        let lastWinner = "";
+        let keepTask = false;
+
+        const sndTick = document.getElementById('soundTick');
+        const sndWin = document.getElementById('soundWin');
+
+        function refreshPool() {
+            // Buổi 1 xáo trộn, Buổi 2 đi theo trình tự 01-07
+            if (currentMode === 1) {
+                pool = [...BUOI1_DATA].sort(() => Math.random() - 0.5);
+            } else {
+                pool = [...BUOI2_DATA];
+            }
+        }
+        refreshPool();
 
         function getNames() { return document.getElementById('nameList').value.split('\n').filter(n => n.trim() !== ""); }
-        function updateCount() { document.getElementById('countDisplay').innerText = `${getNames().length} ĐỐI THỦ ĐANG CHỜ`; }
+        function updateCount() { document.getElementById('countDisplay').innerText = `${getNames().length} NGƯỜI`; }
         document.getElementById('nameList').addEventListener('input', updateCount);
 
         function setMode(mode) {
@@ -197,53 +271,71 @@
         }
 
         function resetGame(clearNames = true) {
-            spinCount = 0; poolS1 = [...BUOI1_MASTER];
+            spinCount = 0; refreshPool(); currentTask = null; keepTask = false;
             document.getElementById('winnerName').innerText = "---";
-            document.getElementById('luckyLabel').classList.remove('show');
-            document.getElementById('turnLabel').innerText = "LƯỢT THỨ: 0";
-            document.getElementById('scenarioBox').innerHTML = '<div style="text-align: center; opacity: 0.3; margin-top: 100px;">Đang đợi chủ nhân mới...</div>';
+            document.getElementById('absentBtn').style.display = "none";
+            document.getElementById('turnLabel').innerText = "LƯỢT: 0";
+            document.getElementById('scenarioBox').innerHTML = '<div style="text-align: center; opacity: 0.3; margin-top: 100px;">Đang chờ chọn chiến binh...</div>';
             document.getElementById('historyList').innerHTML = "";
             if(clearNames) document.getElementById('nameList').value = "";
             updateCount();
         }
 
+        function handleAbsent() {
+            if (!lastWinner) return;
+            const h = document.createElement('div');
+            h.className = 'history-item'; h.style.color = 'var(--danger)';
+            h.innerHTML = `<span>❌ ${lastWinner} (Vắng)</span><span>Giữ kịch bản</span>`;
+            document.getElementById('historyList').prepend(h);
+            document.getElementById('winnerName').innerText = "---";
+            document.getElementById('absentBtn').style.display = "none";
+            keepTask = true; spinCount--;
+            document.getElementById('turnLabel').innerText = `LƯỢT: ${spinCount}`;
+        }
+
+        function handleSpinClick() {
+            if (isSpinning) return;
+            if (!keepTask) currentTask = null;
+            startSpin();
+        }
+
         function startSpin() {
             const names = getNames();
-            if (names.length === 0) return alert("Vui lòng nhập danh sách học viên!");
-            if (isSpinning) return;
+            if (names.length === 0) return alert("Vui lòng nhập danh sách!");
             isSpinning = true; document.getElementById('spinBtn').disabled = true;
-            document.getElementById('luckyLabel').classList.add('show');
-            
+            document.getElementById('absentBtn').style.display = "none";
             let start = Date.now();
             const timer = setInterval(() => {
                 document.getElementById('winnerName').innerText = names[Math.floor(Math.random() * names.length)];
-                sndTick.currentTime = 0; sndTick.play().catch(()=>{});
+                if(sndTick) { sndTick.currentTime = 0; sndTick.play().catch(()=>{}); }
                 if (Date.now() - start > 1500) { clearInterval(timer); finishSpin(names); }
             }, 80);
         }
 
         function finishSpin(names) {
             const winIdx = Math.floor(Math.random() * names.length);
-            const winner = names[winIdx];
-            document.getElementById('winnerName').innerText = winner;
-            spinCount++; document.getElementById('turnLabel').innerText = `LƯỢT THỨ: ${spinCount}`;
-            sndWin.play().catch(()=>{}); confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-
-            let task;
-            if (currentMode === 1) {
-                if (poolS1.length === 0) poolS1 = [...BUOI1_MASTER];
-                const taskIdx = Math.floor(Math.random() * poolS1.length);
-                task = poolS1[taskIdx]; poolS1.splice(taskIdx, 1);
-            } else {
-                task = BUOI2_MASTER[spinCount - 1] || BUOI2_MASTER[BUOI2_MASTER.length-1];
+            lastWinner = names[winIdx];
+            document.getElementById('winnerName').innerText = lastWinner;
+            
+            if (!currentTask) {
+                if (pool.length === 0) {
+                    alert("Đã hết kịch bản. Hệ thống tự động làm mới!");
+                    refreshPool();
+                }
+                // Dùng shift cho Buổi 2 để đúng trình tự, dùng pop cho Buổi 1 (đã xáo trộn)
+                currentTask = currentMode === 2 ? pool.shift() : pool.pop();
             }
 
-            let stepsHtml = task.steps.map(s => `<div class="sc-step"><b>🔹</b> ${s}</div>`).join("");
+            spinCount++;
+            document.getElementById('turnLabel').innerText = `LƯỢT: ${spinCount}`;
+            if(sndWin) sndWin.play().catch(()=>{}); 
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+
             document.getElementById('scenarioBox').innerHTML = `
-                <span class="tag">🚀 ${task.tag}</span>
-                <div class="sc-title">${task.title}</div>
-                <div class="sc-context">📍 ${task.context}</div>
-                ${stepsHtml}
+                <span class="tag">🚀 ${currentTask.tag}</span>
+                <div class="sc-title">${currentTask.title}</div>
+                <div class="sc-context">📍 Ngữ cảnh: ${currentTask.context}</div>
+                ${currentTask.steps.map(s => `<div class="sc-step"> ${s}</div>`).join("")}
             `;
 
             const updated = names.filter((_, i) => i !== winIdx);
@@ -252,10 +344,12 @@
 
             const h = document.createElement('div');
             h.className = 'history-item';
-            h.innerHTML = `<span>⚔️ ${spinCount}. ${winner}</span><span>${task.tag}</span>`;
+            h.innerHTML = `<span>⚔️ ${spinCount}. ${lastWinner}</span><span>${currentTask.tag}</span>`;
             document.getElementById('historyList').prepend(h);
 
-            isSpinning = false; document.getElementById('spinBtn').disabled = false;
+            isSpinning = false; keepTask = false;
+            document.getElementById('spinBtn').disabled = false;
+            document.getElementById('absentBtn').style.display = "block";
         }
     </script>
 </body>
